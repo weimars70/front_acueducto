@@ -1,6 +1,7 @@
 import { apiClient } from './client';
 import type { Consumption } from '../../types/consumption';
 import type { PaginatedResponse } from '../../types/api';
+import type { Installation } from '../../types/installation';
 
 export const consumptionService = {
   async getConsumptions(params: {
@@ -41,8 +42,17 @@ export const consumptionService = {
   },
 
   async create(consumption: Partial<Consumption>) {
-    console.log('consumption:::', consumption);
     const { data } = await apiClient.post('/consumo', consumption);
     return data;
+  },
+
+  async getInstallations(): Promise<Installation[]> {
+    try {
+      const { data } = await apiClient.get<Installation[]>('/instalaciones/all');
+      return data;
+    } catch (error) {
+      console.error('Error getting installations:', error);
+      throw error;
+    }
   }
 };

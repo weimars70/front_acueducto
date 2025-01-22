@@ -3,6 +3,8 @@ import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { consumptionService } from '../services/api/consumption.service';
+import { sqliteService } from '../services/database/sqlite.service';
+import { syncService } from '../services/sync/sync.service';
 import { months } from '../utils/dates';
 
 export function useConsumptionForm() {
@@ -30,7 +32,6 @@ export function useConsumptionForm() {
   const formData = ref({ ...initialFormState });
 
   const resetForm = () => {
-    // Preserve mes, year, and fecha
     const { mes, year, fecha } = formData.value;
     formData.value = {
       ...initialFormState,
@@ -104,11 +105,19 @@ export function useConsumptionForm() {
         usuario: authStore.user?.name || ''
       };
 
-      await consumptionService.create(consumptionData);
+      if (syncService.isOnline()) {
+        // Si está online, guardar directamente en el servidor
+        await consumptionService.create(consumptionData);
+      } else {
+        // Si está offline, guardar localmente
+        await sqliteService.saveOfflineConsumption(consumptionData);
+      }
       
       $q.notify({
         type: 'positive',
-        message: 'Consumo registrado exitosamente'
+        message: syncService.isOnline() 
+          ? 'Consumo registrado exitosamente'
+          : 'Consumo guardado localmente. Se sincronizará cuando haya conexión'
       });
       
       resetForm();

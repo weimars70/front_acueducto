@@ -29,6 +29,12 @@ const updateField = (field: keyof typeof props.modelValue, value: string) => {
     [field]: value
   });
 };
+
+const formatDate = (date: string) => {
+  if (!date) return '';
+  const [year, month, day] = date.split('-');
+  return `${year}-${month}-${day}`;
+};
 </script>
 
 <template>
@@ -71,14 +77,14 @@ const updateField = (field: keyof typeof props.modelValue, value: string) => {
         outlined
         dense
         readonly
-        @update:model-value="value => updateField('fecha', value)"
+        @update:model-value="value => updateField('fecha', formatDate(value))"
       >
         <template v-slot:append>
           <q-icon name="event" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
               <q-date
                 :model-value="modelValue.fecha"
-                mask="DD/MM/YYYY"
+                mask="YYYY-MM-DD"
                 @update:model-value="value => updateField('fecha', value)"
               />
             </q-popup-proxy>

@@ -5,9 +5,18 @@ const config: CapacitorConfig = {
   appName: 'weimar-acueductos',
   webDir: 'dist',
   server: {
-    androidScheme: "http",
+    androidScheme: 'http',
     cleartext: true,
+    allowNavigation: ['*']
   },
+  android: {
+    allowMixedContent: true
+  },
+  plugins: {
+    CapacitorSQLite: {
+      iosKeepAspectRatio: true
+    }
+  }
 };
 
 export default config;
