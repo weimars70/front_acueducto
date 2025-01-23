@@ -23,7 +23,8 @@ async function handleLogin() {
     });
     return;
   }
-
+  console.error('username:::', username);
+  console.error('password:::', password);
   try {
     loading.value = true;
     const success = await authStore.login({

@@ -22,6 +22,16 @@ export class ConsumoController {
     return this.consumoService.findAll(pageNumber, pageSize, filters);
   }
 
+  @Get('last-readings')
+  async getLastReadings(
+    @Query('year') year: string,
+    @Query('month') month: string,
+  ) {
+    const yearNum = year ? parseInt(year, 10) : new Date().getFullYear();
+    const monthNum = month ? parseInt(month, 10) : new Date().getMonth() + 1;
+    return this.consumoService.getLastReadings(yearNum, monthNum);
+  }
+
   @Post()
   @UseGuards(JwtAuthGuard)
   async create(@Body() createConsumoDto: CreateConsumoDto, @Request() req) {

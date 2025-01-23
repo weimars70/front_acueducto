@@ -14,11 +14,11 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://localhost'],
+    origin: ['http://localhost:5173', 'http://localhost', 'http://localhost:3000'],
     methods: 'GET,POST,PUT,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type,Authorization',
   });
 
-  await app.listen(3005);
+  await app.listen(3000);
 }
 bootstrap();

@@ -55,6 +55,40 @@ export class ConsumoService {
     }
   }
 
+  async getLastReadings(year: number, month: number) {
+    try {
+      const { data: allReadings, error: readingsError } = await this.supabase
+        .from('view_consumo')
+        .select('*')
+        .eq('year', year)
+        .eq('mes_codigo', month)
+        .order('fecha', { ascending: false })
+        .order('codigo', { ascending: false });
+
+      if (readingsError) {
+        throw new Error(`Error fetching readings: ${readingsError.message}`);
+      }
+
+      // Create a map to store the latest reading for each installation
+      const latestReadings = new Map();
+
+      // Get only the latest reading for each installation
+      allReadings.forEach(reading => {
+        if (!latestReadings.has(reading.instalacion)) {
+          latestReadings.set(reading.instalacion, reading);
+        }
+      });
+
+      // Convert the map values to an array and sort by installation
+      return Array.from(latestReadings.values())
+        .sort((a, b) => a.instalacion - b.instalacion);
+
+    } catch (error) {
+      console.error('Error getting last readings:', error);
+      throw new Error(`Error getting last readings: ${error.message}`);
+    }
+  }
+
   async create(createConsumoDto: CreateConsumoDto, userId: string) {
     try {
       const { data, error } = await this.supabase

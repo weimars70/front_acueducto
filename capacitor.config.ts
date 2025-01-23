@@ -11,11 +11,6 @@ const config: CapacitorConfig = {
   },
   android: {
     allowMixedContent: true
-  },
-  plugins: {
-    CapacitorSQLite: {
-      iosKeepAspectRatio: true
-    }
   }
 };
 

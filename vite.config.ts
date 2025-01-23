@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import { quasar, transformAssetUrls } from '@quasar/vite-plugin';
 import path from 'path';
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue({
@@ -12,7 +13,12 @@ export default defineConfig({
       sassVariables: path.resolve(__dirname, './src/styles/quasar-variables.sass')
     })
   ],
-  base: './', // Add this line
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  },
+  base: './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -25,7 +31,7 @@ export default defineConfig({
       }
     },
     commonjsOptions: {
-      esmExternals: true 
+      esmExternals: true
     }
   }
-});
+})
